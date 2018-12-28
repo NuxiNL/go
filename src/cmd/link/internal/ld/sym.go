@@ -75,6 +75,7 @@ func (ctxt *Link) computeTLSOffset() {
 		 * Known to low-level assembly in package runtime and runtime/cgo.
 		 */
 	case objabi.Hlinux,
+		objabi.Hcloudabi,
 		objabi.Hfreebsd,
 		objabi.Hnetbsd,
 		objabi.Hopenbsd,

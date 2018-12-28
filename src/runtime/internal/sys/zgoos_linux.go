@@ -9,6 +9,7 @@ const GOOS = `linux`
 
 const GoosAix = 0
 const GoosAndroid = 0
+const GoosCloudabi = 0
 const GoosDarwin = 0
 const GoosDragonfly = 0
 const GoosFreebsd = 0

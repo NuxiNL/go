@@ -115,6 +115,7 @@ const (
 	ELFOSABI_OPENBSD     = 12
 	ELFOSABI_OPENVMS     = 13
 	ELFOSABI_NSK         = 14
+	ELFOSABI_CLOUDABI    = 17
 	ELFOSABI_ARM         = 97
 	ELFOSABI_STANDALONE  = 255
 	ELFOSABI_SYSV        = ELFOSABI_NONE
@@ -2179,7 +2180,9 @@ elfobj:
 	eh.ident[EI_MAG1] = 'E'
 	eh.ident[EI_MAG2] = 'L'
 	eh.ident[EI_MAG3] = 'F'
-	if ctxt.HeadType == objabi.Hfreebsd {
+	if ctxt.HeadType == objabi.Hcloudabi {
+		eh.ident[EI_OSABI] = ELFOSABI_CLOUDABI
+	} else if ctxt.HeadType == objabi.Hfreebsd {
 		eh.ident[EI_OSABI] = ELFOSABI_FREEBSD
 	} else if ctxt.HeadType == objabi.Hnetbsd {
 		eh.ident[EI_OSABI] = ELFOSABI_NETBSD

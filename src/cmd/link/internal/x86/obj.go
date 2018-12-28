@@ -99,6 +99,7 @@ func archinit(ctxt *ld.Link) {
 		}
 
 	case objabi.Hlinux, /* elf32 executable */
+		objabi.Hcloudabi,
 		objabi.Hfreebsd,
 		objabi.Hnetbsd,
 		objabi.Hopenbsd:

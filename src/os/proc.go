@@ -4,6 +4,8 @@
 
 // Process etc.
 
+// +build !cloudabi
+
 package os
 
 import (

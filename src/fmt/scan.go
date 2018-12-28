@@ -8,7 +8,6 @@ import (
 	"errors"
 	"io"
 	"math"
-	"os"
 	"reflect"
 	"strconv"
 	"sync"
@@ -54,31 +53,6 @@ type ScanState interface {
 // for any argument to Scan, Scanf, or Scanln that implements it.
 type Scanner interface {
 	Scan(state ScanState, verb rune) error
-}
-
-// Scan scans text read from standard input, storing successive
-// space-separated values into successive arguments. Newlines count
-// as space. It returns the number of items successfully scanned.
-// If that is less than the number of arguments, err will report why.
-func Scan(a ...interface{}) (n int, err error) {
-	return Fscan(os.Stdin, a...)
-}
-
-// Scanln is similar to Scan, but stops scanning at a newline and
-// after the final item there must be a newline or EOF.
-func Scanln(a ...interface{}) (n int, err error) {
-	return Fscanln(os.Stdin, a...)
-}
-
-// Scanf scans text read from standard input, storing successive
-// space-separated values into successive arguments as determined by
-// the format. It returns the number of items successfully scanned.
-// If that is less than the number of arguments, err will report why.
-// Newlines in the input must match newlines in the format.
-// The one exception: the verb %c always scans the next rune in the
-// input, even if it is a space (or tab etc.) or newline.
-func Scanf(format string, a ...interface{}) (n int, err error) {
-	return Fscanf(os.Stdin, format, a...)
 }
 
 type stringReader string

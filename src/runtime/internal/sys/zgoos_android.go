@@ -8,6 +8,7 @@ const GOOS = `android`
 
 const GoosAix = 0
 const GoosAndroid = 1
+const GoosCloudabi = 0
 const GoosDarwin = 0
 const GoosDragonfly = 0
 const GoosFreebsd = 0

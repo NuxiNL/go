@@ -720,6 +720,7 @@ func asmb(ctxt *ld.Link) {
 		ld.Flag8 = true /* 64-bit addresses */
 
 	case objabi.Hlinux,
+		objabi.Hcloudabi,
 		objabi.Hfreebsd,
 		objabi.Hnetbsd,
 		objabi.Hopenbsd,
@@ -750,6 +751,7 @@ func asmb(ctxt *ld.Link) {
 			symo = int64(ld.Segdwarf.Fileoff + uint64(ld.Rnd(int64(ld.Segdwarf.Filelen), int64(*ld.FlagRound))) + uint64(machlink))
 
 		case objabi.Hlinux,
+			objabi.Hcloudabi,
 			objabi.Hfreebsd,
 			objabi.Hnetbsd,
 			objabi.Hopenbsd,
@@ -830,6 +832,7 @@ func asmb(ctxt *ld.Link) {
 		ld.Asmbmacho(ctxt)
 
 	case objabi.Hlinux,
+		objabi.Hcloudabi,
 		objabi.Hfreebsd,
 		objabi.Hnetbsd,
 		objabi.Hopenbsd,

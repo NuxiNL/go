@@ -2351,7 +2351,8 @@ func prefixof(ctxt *obj.Link, a *obj.Addr) int {
 					return 0x64 // FS
 				}
 
-			case objabi.Hdragonfly,
+			case objabi.Hcloudabi,
+				objabi.Hdragonfly,
 				objabi.Hfreebsd,
 				objabi.Hnetbsd,
 				objabi.Hopenbsd,
@@ -4980,7 +4981,7 @@ func (ab *AsmBuf) doasm(ctxt *obj.Link, cursym *obj.LSym, p *obj.Prog) {
 					default:
 						log.Fatalf("unknown TLS base location for %v", ctxt.Headtype)
 
-					case objabi.Hlinux, objabi.Hfreebsd:
+					case objabi.Hcloudabi, objabi.Hlinux, objabi.Hfreebsd:
 						if !ctxt.Flag_shared {
 							log.Fatalf("unknown TLS base location for linux/freebsd without -shared")
 						}

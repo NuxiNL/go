@@ -1103,6 +1103,7 @@ func asmb(ctxt *ld.Link) {
 		ctxt.Out.Write32(uint32(ld.Lcsize))
 
 	case objabi.Hlinux,
+		objabi.Hcloudabi,
 		objabi.Hfreebsd,
 		objabi.Hnetbsd,
 		objabi.Hopenbsd,

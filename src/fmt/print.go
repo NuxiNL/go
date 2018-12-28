@@ -8,7 +8,6 @@ import (
 	"errors"
 	"internal/fmtsort"
 	"io"
-	"os"
 	"reflect"
 	"sync"
 	"unicode/utf8"
@@ -202,12 +201,6 @@ func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
 	return
 }
 
-// Printf formats according to a format specifier and writes to standard output.
-// It returns the number of bytes written and any write error encountered.
-func Printf(format string, a ...interface{}) (n int, err error) {
-	return Fprintf(os.Stdout, format, a...)
-}
-
 // Sprintf formats according to a format specifier and returns the resulting string.
 func Sprintf(format string, a ...interface{}) string {
 	p := newPrinter()
@@ -236,13 +229,6 @@ func Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 	return
 }
 
-// Print formats using the default formats for its operands and writes to standard output.
-// Spaces are added between operands when neither is a string.
-// It returns the number of bytes written and any write error encountered.
-func Print(a ...interface{}) (n int, err error) {
-	return Fprint(os.Stdout, a...)
-}
-
 // Sprint formats using the default formats for its operands and returns the resulting string.
 // Spaces are added between operands when neither is a string.
 func Sprint(a ...interface{}) string {
@@ -266,13 +252,6 @@ func Fprintln(w io.Writer, a ...interface{}) (n int, err error) {
 	n, err = w.Write(p.buf)
 	p.free()
 	return
-}
-
-// Println formats using the default formats for its operands and writes to standard output.
-// Spaces are always added between operands and a newline is appended.
-// It returns the number of bytes written and any write error encountered.
-func Println(a ...interface{}) (n int, err error) {
-	return Fprintln(os.Stdout, a...)
 }
 
 // Sprintln formats using the default formats for its operands and returns the resulting string.

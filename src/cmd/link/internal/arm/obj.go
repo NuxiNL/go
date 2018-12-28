@@ -89,6 +89,7 @@ func archinit(ctxt *ld.Link) {
 		}
 
 	case objabi.Hlinux, /* arm elf */
+		objabi.Hcloudabi,
 		objabi.Hfreebsd,
 		objabi.Hnetbsd,
 		objabi.Hopenbsd:
