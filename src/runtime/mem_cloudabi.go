@@ -3,11 +3,28 @@
 package runtime
 
 import (
+	"internal/syscall/cloudabi"
 	"unsafe"
 )
 
 func sysAlloc(n uintptr, sysStat *uint64) unsafe.Pointer {
-	return nil
+	// TODO: This is incorrect.
+	var v unsafe.Pointer
+	args := [...]unsafe.Pointer{
+		nil,
+		unsafe.Pointer(uintptr(n)),
+		unsafe.Pointer(uintptr(cloudabi.Mprot_Read | cloudabi.Mprot_Write)),
+		unsafe.Pointer(uintptr(cloudabi.Mflags_Anon | cloudabi.Mflags_Private)),
+		unsafe.Pointer(uintptr(cloudabi.Fd_MapAnonFd)),
+		nil,
+		unsafe.Pointer(&v),
+	}
+	err := asmcgocall(_cloudabi_sys_mem_map, unsafe.Pointer(&args))
+	if err != 0 {
+		return nil
+	}
+	mSysStatInc(sysStat, n)
+	return v
 }
 
 func sysMap(v unsafe.Pointer, n uintptr, sysStat *uint64) {

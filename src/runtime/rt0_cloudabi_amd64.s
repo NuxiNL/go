@@ -4,10 +4,12 @@
 
 #include "textflag.h"
 
-// On FreeBSD argc/argv are passed in DI, not SP, so we can't use _rt0_amd64.
+// CloudABI does not support command line arguments, so set argc to
+// zero. Even though argv itself is of little use, use it to preserve
+// the address of the auxiliary vector.
 TEXT _rt0_amd64_cloudabi(SB),NOSPLIT,$-8
-	LEAQ	8(DI), SI // argv
-	MOVQ	0(DI), DI // argc
+	MOVQ	DI, SI // argv == auxiliary vector
+	MOVQ	$0, DI // argc == 0
 	JMP	runtime·rt0_go(SB)
 
 TEXT _rt0_amd64_cloudabi_lib(SB),NOSPLIT,$0
