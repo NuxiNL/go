@@ -160,6 +160,10 @@ needtls:
 	// skip TLS setup on Darwin
 	JMP ok
 #endif
+#ifdef GOOS_cloudabi
+	// TODO: Is this correct?
+	JMP ok
+#endif
 
 	LEAQ	runtime·m0+m_tls(SB), DI
 	CALL	runtime·settls(SB)
