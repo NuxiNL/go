@@ -34,18 +34,19 @@ import (
 //
 var pkgDeps = map[string][]string{
 	// L0 is the lowest level, core, nearly unavoidable packages.
-	"errors":                  {},
-	"io":                      {"errors", "sync", "sync/atomic"},
-	"runtime":                 {"unsafe", "runtime/internal/atomic", "runtime/internal/sys", "runtime/internal/math", "internal/cpu", "internal/bytealg"},
-	"runtime/internal/sys":    {},
-	"runtime/internal/atomic": {"unsafe", "internal/cpu"},
-	"runtime/internal/math":   {"runtime/internal/sys"},
-	"internal/race":           {"runtime", "unsafe"},
-	"sync":                    {"internal/race", "runtime", "sync/atomic", "unsafe"},
-	"sync/atomic":             {"unsafe"},
-	"unsafe":                  {},
-	"internal/cpu":            {},
-	"internal/bytealg":        {"unsafe", "internal/cpu"},
+	"errors":                    {},
+	"io":                        {"errors", "sync", "sync/atomic"},
+	"runtime":                   {"unsafe", "runtime/internal/atomic", "runtime/internal/sys", "runtime/internal/math", "internal/cpu", "internal/bytealg", "internal/syscall/cloudabi"},
+	"runtime/internal/sys":      {},
+	"runtime/internal/atomic":   {"unsafe", "internal/cpu"},
+	"runtime/internal/math":     {"runtime/internal/sys"},
+	"internal/race":             {"runtime", "unsafe"},
+	"sync":                      {"internal/race", "runtime", "sync/atomic", "unsafe"},
+	"sync/atomic":               {"unsafe"},
+	"unsafe":                    {},
+	"internal/cpu":              {},
+	"internal/bytealg":          {"unsafe", "internal/cpu"},
+	"internal/syscall/cloudabi": {"unsafe"},
 
 	"L0": {
 		"errors",
@@ -57,6 +58,7 @@ var pkgDeps = map[string][]string{
 		"unsafe",
 		"internal/cpu",
 		"internal/bytealg",
+		"internal/syscall/cloudabi",
 	},
 
 	// L1 adds simple functions and strings processing,
