@@ -13,13 +13,17 @@ import (
 
 const _NSIG = 27
 
-func getRandomData(r []byte) {}
+func getRandomData(r []byte) {
+	cloudabi_sys_random_get(unsafe.Pointer(&r[0]), uint(len(r)))
+}
 
 type sigset struct{}
 
 type mOS struct{}
 
-func osyield() {}
+func osyield() {
+	cloudabi_sys_thread_yield()
+}
 
 type gsignalStack struct{}
 
@@ -47,10 +51,21 @@ func sigenable(uint32)               {}
 func sigignore(uint32)               {}
 func clearSignalHandlers()           {}
 
-func nanotime() int64 { return 123 }
+func nanotime() int64 {
+	t, _ := cloudabi_sys_clock_time_get(cloudabi.Clockid_Monotonic, 0)
+	return int64(t)
+}
 
 func write(fd uintptr, p unsafe.Pointer, n int32) int32 {
-	return n
+	iov := cloudabi.Ciovec{
+		Buf:    p,
+		BufLen: uint(n),
+	}
+	l, err := cloudabi_sys_fd_write(cloudabi.Fd(fd), &iov, 1)
+	if err != cloudabi.Errno_Success {
+		return 0
+	}
+	return int32(l)
 }
 
 func exit(code int32) {}

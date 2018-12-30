@@ -8,40 +8,59 @@ import (
 )
 
 func sysAlloc(n uintptr, sysStat *uint64) unsafe.Pointer {
-	// TODO: This is incorrect.
-	var v unsafe.Pointer
-	args := [...]unsafe.Pointer{
-		nil,
-		unsafe.Pointer(uintptr(n)),
-		unsafe.Pointer(uintptr(cloudabi.Mprot_Read | cloudabi.Mprot_Write)),
-		unsafe.Pointer(uintptr(cloudabi.Mflags_Anon | cloudabi.Mflags_Private)),
-		unsafe.Pointer(uintptr(cloudabi.Fd_MapAnonFd)),
-		nil,
-		unsafe.Pointer(&v),
-	}
-	err := asmcgocall(_cloudabi_sys_mem_map, unsafe.Pointer(&args))
-	if err != 0 {
+	v, err := cloudabi_sys_mem_map(
+		nil, uint(n), cloudabi.Mprot_Read | cloudabi.Mprot_Write,
+		cloudabi.Mflags_Anon | cloudabi.Mflags_Private,
+		cloudabi.Fd_MapAnonFd, 0)
+	if err != cloudabi.Errno_Success {
 		return nil
 	}
 	mSysStatInc(sysStat, n)
 	return v
 }
 
-func sysMap(v unsafe.Pointer, n uintptr, sysStat *uint64) {
-}
-
 func sysUnused(v unsafe.Pointer, n uintptr) {
+	cloudabi_sys_mem_advise(v, uint(n), cloudabi.Advice_Dontneed)
 }
 
 func sysUsed(v unsafe.Pointer, n uintptr) {
 }
 
+// Don't split the stack as this function may be invoked without a valid G,
+// which prevents us from allocating more stack.
+//go:nosplit
 func sysFree(v unsafe.Pointer, n uintptr, sysStat *uint64) {
+	mSysStatDec(sysStat, n)
+	cloudabi_sys_mem_unmap(v, uint(n))
 }
 
 func sysFault(v unsafe.Pointer, n uintptr) {
+	cloudabi_sys_mem_map(
+		v, uint(n), 0, cloudabi.Mflags_Anon | cloudabi.Mflags_Fixed |
+		cloudabi.Mflags_Private, cloudabi.Fd_MapAnonFd, 0)
 }
 
 func sysReserve(v unsafe.Pointer, n uintptr) unsafe.Pointer {
-	return nil
+	p, err := cloudabi_sys_mem_map(
+		v, uint(n), 0, cloudabi.Mflags_Anon | cloudabi.Mflags_Private,
+		cloudabi.Fd_MapAnonFd, 0)
+	if err != cloudabi.Errno_Success {
+		return nil
+	}
+	return p
+}
+
+func sysMap(v unsafe.Pointer, n uintptr, sysStat *uint64) {
+	mSysStatInc(sysStat, n)
+
+	p, err := cloudabi_sys_mem_map(
+		v, uint(n), cloudabi.Mprot_Read | cloudabi.Mprot_Write,
+		cloudabi.Mflags_Anon | cloudabi.Mflags_Fixed |
+		cloudabi.Mflags_Private, cloudabi.Fd_MapAnonFd, 0)
+	if err == cloudabi.Errno_Nomem {
+		throw("runtime: out of memory")
+	}
+	if p != v || err != cloudabi.Errno_Success {
+		throw("runtime: cannot map pages in arena address space")
+	}
 }
